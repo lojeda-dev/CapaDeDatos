@@ -8,7 +8,7 @@ public interface IPersonaDAO {
 
     List<PersonaDTO> seleccionar();
 
-    int indertar(PersonaDTO persona);
+    int insertar(PersonaDTO persona);
 
     int actualizar(PersonaDTO persona);
 
