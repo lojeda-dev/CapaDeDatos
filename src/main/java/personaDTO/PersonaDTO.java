@@ -11,6 +11,12 @@ public class PersonaDTO {
         this.idPersona = idPersona;
     }
 
+    public PersonaDTO(int idPersona, String nombre, String apellido){
+        this.idPersona = idPersona;
+        this.nombre = nombre;
+        this.apellido = apellido;
+    }
+
     public int getIdPersona() {
         return idPersona;
     }
