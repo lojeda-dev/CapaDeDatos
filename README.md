@@ -10,7 +10,8 @@ Clona el repositorio en tu máquina local.
 Abre el proyecto en tu entorno de desarrollo compatible con Java 17 y Maven.
 Explora la estructura de paquetes, centrándote en PersonaDAO, PersonaDTO y PersonaMain.
 Utiliza la clase PersonaTest en el paquete PersonaMain para realizar pruebas y entender la interacción con la capa de datos.
-Tecnologías Utilizadas
+
+# Tecnologías Utilizadas
 El proyecto se desarrolla en Java 17 y utiliza Maven como gestor de dependencias. Además, se aprovecha la potencia de JDBC para la interacción con la base de datos. La elección de estas tecnologías garantiza un desarrollo robusto y eficiente.
 
 # Arquitectura del Proyecto
