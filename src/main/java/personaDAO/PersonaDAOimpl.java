@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PersonaDAOimpl implements IPersonaDAO {
-
+    //
+    private Connection conexionTransaccional;
     private static final String JDBC_SELECT = "SELECT id_persona, nombre, apellido FROM personas";
     private static final String JDBC_INSERT = "INSERT INTO personas (nombre,apellido) VALUES (?,?)";
     private static final String JDBC_UPDATE = "UPDATE personas SET nombre = ?, apellido = ? WHERE id_persona = ?";
@@ -20,11 +21,18 @@ public class PersonaDAOimpl implements IPersonaDAO {
     private ResultSet rs = null;
     private PreparedStatement ps = null;
 
+    public PersonaDAOimpl() {
+    }
+
+    public PersonaDAOimpl(Connection conexionTransaccional) {
+        this.conexionTransaccional = conexionTransaccional;
+    }
+
     @Override
-    public List<PersonaDTO> seleccionar() {
+    public List<PersonaDTO> seleccionar() throws SQLException {
         List<PersonaDTO> personas = new ArrayList<>();
         try {
-            con = Conexion.getConnection();
+            con = this.conexionTransaccional != null ? this.conexionTransaccional : Conexion.getConnection();
             ps = con.prepareStatement(JDBC_SELECT);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -34,14 +42,13 @@ public class PersonaDAOimpl implements IPersonaDAO {
                 persona.setApellido(rs.getString(3));
                 personas.add(persona);
             }
-        } catch (SQLException e) {
-            e.printStackTrace(System.out);
-            System.out.println("ERROR GET CONNECTION SELECCIONAR");
         } finally {
             try {
                 Conexion.close(rs);
                 Conexion.close(ps);
-                Conexion.close(con);
+                if (conexionTransaccional == null) {
+                    Conexion.close(con);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
                 System.out.println("ERROR AL CERRAR CONEXION SELECCIONAR");
@@ -51,21 +58,20 @@ public class PersonaDAOimpl implements IPersonaDAO {
     }
 
     @Override
-    public int insertar(PersonaDTO persona) {
+    public int insertar(PersonaDTO persona) throws SQLException {
         int registros = 0;
         try {
-            con = Conexion.getConnection();
+            con = this.conexionTransaccional != null ? this.conexionTransaccional : Conexion.getConnection();
             ps = con.prepareStatement(JDBC_INSERT);
             ps.setString(1, persona.getNombre());
             ps.setString(2, persona.getApellido());
             registros = ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace(System.out);
-            System.out.println("ERROR GET CONNECTION INSERTAR");
         } finally {
             try {
                 Conexion.close(ps);
-                Conexion.close(con);
+                if (conexionTransaccional == null) {
+                    Conexion.close(con);
+                }
             } catch (SQLException e) {
                 e.printStackTrace(System.out);
                 System.out.println("ERROR AL CERRAR CONEXION INSERTAR");
@@ -75,24 +81,22 @@ public class PersonaDAOimpl implements IPersonaDAO {
     }
 
     @Override
-    public int actualizar(PersonaDTO persona) {
+    public int actualizar(PersonaDTO persona) throws SQLException {
         int registros = 0;
 
         try {
-            con = Conexion.getConnection();
+            con = this.conexionTransaccional != null ? this.conexionTransaccional : Conexion.getConnection();
             ps = con.prepareStatement(JDBC_UPDATE);
             ps.setString(1, persona.getNombre());
             ps.setString(2, persona.getApellido());
             ps.setInt(3, persona.getIdPersona());
             registros = ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace(System.out);
-            System.out.println("ERROR GET CONEXION ACTUALIZAR");
         } finally {
             try {
                 Conexion.close(ps);
-                Conexion.close(con);
-
+                if (conexionTransaccional == null) {
+                    Conexion.close(con);
+                }
             } catch (SQLException e) {
                 e.printStackTrace(System.out);
                 System.out.println("ERROR AL CERRAR CONEXION ACTUALIZAR");
@@ -102,21 +106,20 @@ public class PersonaDAOimpl implements IPersonaDAO {
     }
 
     @Override
-    public int borrar(PersonaDTO persona) {
+    public int borrar(PersonaDTO persona) throws SQLException {
         int registros = 0;
 
         try {
-            con = Conexion.getConnection();
+            con = this.conexionTransaccional != null ? this.conexionTransaccional : Conexion.getConnection();
             ps = con.prepareStatement(JDBC_DELETE);
-            ps.setInt(1,persona.getIdPersona());
+            ps.setInt(1, persona.getIdPersona());
             registros = ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace(System.out);
-            System.out.println("ERROR GET CONNECTION BORRAR");
         } finally {
             try {
                 Conexion.close(ps);
-                Conexion.close(con);
+                if (conexionTransaccional == null) {
+                    Conexion.close(con);
+                }
             } catch (SQLException e) {
                 e.printStackTrace(System.out);
                 System.out.println("ERROR AL CERRAR CONEXION BORRAR");
